@@ -59,6 +59,12 @@ class OpenAICompatibleClient(BaseLLMClient):
 
         with httpx.Client(timeout=90.0, trust_env=False) as client:
             resp = client.post(url, headers=headers, json=payload)
+            # Si el modelo no soporta tool calling (como moondream/llava), reintentar sin tools
+            if resp.status_code == 400 and "tool" in resp.text.lower() and "tools" in payload:
+                payload_no_tools = dict(payload)
+                del payload_no_tools["tools"]
+                payload_no_tools.pop("tool_choice", None)
+                resp = client.post(url, headers=headers, json=payload_no_tools)
             resp.raise_for_status()
             data = resp.json()
 
