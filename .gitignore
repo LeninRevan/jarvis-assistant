@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Temporal files
+*.mp3
+*.wav
+*.jpg
+*.png
+/tmp/
+.vscode/
+.idea/
